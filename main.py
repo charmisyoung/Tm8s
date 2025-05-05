@@ -32,6 +32,7 @@ class TM8SApp(QtWidgets.QDialog):
         self.ui.p2_search_box.lineEdit().textChanged.connect(self.update_button_state)
         self.ui.player_search_button.clicked.connect(self.search_connection)
         self.ui.results_box_slider.valueChanged.connect(self.adjust_results_scroll)
+        self.ui.reset_button.clicked.connect(self.reset_form)
 
 
     def initialize_ui(self) -> None:
@@ -146,8 +147,19 @@ class TM8SApp(QtWidgets.QDialog):
         normal_format = QtGui.QTextCharFormat()
         normal_format.setFontWeight(QtGui.QFont.Weight.Normal)
 
-        self.ui.results_display.clear()
+        green_format = QtGui.QTextCharFormat()
+        green_format.setForeground(QtGui.QBrush(QtGui.QColor("green")))
+        green_format.setFontWeight(QtGui.QFont.Weight.Bold)
 
+        red_format = QtGui.QTextCharFormat()
+        red_format.setForeground(QtGui.QBrush(QtGui.QColor("red")))
+        red_format.setFontWeight(QtGui.QFont.Weight.Bold)
+
+        blue_format = QtGui.QTextCharFormat()
+        blue_format.setForeground(QtGui.QBrush(QtGui.QColor("blue")))
+        blue_format.setFontWeight(QtGui.QFont.Weight.Bold)
+
+        self.ui.results_display.clear()
         cursor = self.ui.results_display.textCursor()
 
         cursor.insertText(f"{p1} and {p2}", bold_format)
@@ -157,15 +169,15 @@ class TM8SApp(QtWidgets.QDialog):
         overlapping = [c for c in connections if c.get("overlapped", False)]
 
         if connections:
-            cursor.insertText("✓ PLAYED TOGETHER AT:", bold_format)
+            cursor.insertText("✓ PLAYED TOGETHER AT:", green_format)
             cursor.insertBlock()
             cursor.insertBlock()
 
             for conn in connections:
-                cursor.insertText(f"{conn['club_name']}", bold_format)
+                cursor.insertText(f"{conn['club_name']}", blue_format)
                 cursor.insertBlock()
 
-                cursor.insertText(f"✓ Played together: {conn['overlap_start']}-{conn['overlap_end']}", normal_format)
+                cursor.insertText(f"Played together: {conn['overlap_start']}-{conn['overlap_end']}", green_format)
                 cursor.insertBlock()
 
                 cursor.insertText(f"{p1} at club: {conn['p1_period']}", normal_format)
@@ -174,7 +186,7 @@ class TM8SApp(QtWidgets.QDialog):
                 cursor.insertBlock()
                 cursor.insertBlock()
         else:
-            cursor.insertText("✗ Never played together at the same club", bold_format)
+            cursor.insertText("✗ Never played together at the same club", red_format)
 
         self.update_results_slider_range()
 
@@ -203,6 +215,31 @@ class TM8SApp(QtWidgets.QDialog):
                 self.ui.results_box_slider.setMaximum(0)
         except Exception as e:
             print(f"Error: {str(e)}")
+
+
+    def reset_form(self) -> None:
+        """Reset the form"""
+
+        self.ui.results_display.clear()
+
+        self.ui.search_progress_bar.setValue(0)
+        self.ui.search_progress_bar.setVisible(False)
+
+        self.ui.player_search_button.setEnabled(False)
+
+        all_players = self.db.get_all_players()
+
+        self.ui.p1_search_box.clear()
+        self.ui.p2_search_box.clear()
+        self.ui.p1_search_box.addItems(all_players)
+        self.ui.p2_search_box.addItems(all_players)
+
+        self.ui.p1_search_box.clearEditText()
+        self.ui.p2_search_box.clearEditText()
+
+        self.ui.p1_search_box.lineEdit().setPlaceholderText("Begin typing a player name")
+        self.ui.p2_search_box.lineEdit().setPlaceholderText("Begin typing a player name")
+
 
 
 if __name__ == "__main__":

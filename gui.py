@@ -111,6 +111,34 @@ class Ui_TM8S(object):
         self.search_progress_bar.setProperty("value", 24)
         self.search_progress_bar.setAlignment(QtCore.Qt.AlignmentFlag.AlignBottom|QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.search_progress_bar.setObjectName("search_progress_bar")
+        self.reset_button = QtWidgets.QPushButton(parent=self.group_box_player_search)
+        self.reset_button.setEnabled(True)
+        self.reset_button.setGeometry(QtCore.QRect(10, 170, 75, 24))
+        self.reset_button.setMaximumSize(QtCore.QSize(300, 150))
+        self.reset_button.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDate)
+        self.reset_button.setFlat(False)
+        self.reset_button.setObjectName("reset_button")
+        self.reset_button.setStyleSheet("""
+            QPushButton {
+                background-color: #cccccc;
+                color: black;
+                border: 1;
+                border-radius: 3px;
+                padding: 6px 12px;
+            }
+            QPushButton:hover {
+                background-color: grey;
+                color: red;
+            }
+            QPushButton:pressed {
+                background-color: #005a9e;
+                color: red;
+            }
+            QPushButton:disabled {
+                background-color: #cccccc;
+                color: #666666;
+            }
+        """)
         self.group_box_results = QtWidgets.QGroupBox(parent=TM8S)
         self.group_box_results.setGeometry(QtCore.QRect(9, 219, 461, 321))
         self.group_box_results.setObjectName("group_box_results")
@@ -137,6 +165,7 @@ class Ui_TM8S(object):
         self.p2_label.setText(_translate("TM8S", "Player 2"))
         self.p1_search_box.setCurrentText(_translate("TM8S", "Begin typing a player name"))
         self.player_search_button.setText(_translate("TM8S", "Search"))
+        self.reset_button.setText(_translate("TM8S", "Reset"))
         self.group_box_results.setTitle(_translate("TM8S", "Results"))
         self.results_display.setHtml(_translate("TM8S", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
