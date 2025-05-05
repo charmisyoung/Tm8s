@@ -84,6 +84,8 @@ class Ui_TM8S(object):
         self.player_search_button.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDate)
         self.player_search_button.setFlat(False)
         self.player_search_button.setObjectName("player_search_button")
+
+        # I googled how to manually set styles using QtDesigner code
         self.player_search_button.setStyleSheet("""
             QPushButton {
                 background-color: #0078d7;
@@ -118,7 +120,9 @@ class Ui_TM8S(object):
         self.reset_button.setInputMethodHints(QtCore.Qt.InputMethodHint.ImhDate)
         self.reset_button.setFlat(False)
         self.reset_button.setObjectName("reset_button")
-        self.reset_button.setStyleSheet("""
+
+        # I googled how to manually set styles using QtDesigner code
+        self.reset_button.setStyleSheet("""     
             QPushButton {
                 background-color: #cccccc;
                 color: black;
