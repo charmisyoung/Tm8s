@@ -2,14 +2,20 @@
 Connection finder module for Tm8s
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Tuple, Any, Optional
 
 class ConnectionFinder:
-    def find_player_connections(self, p1_clubs: List[tuple], p2_clubs: List[tuple]) -> List[Dict]:
+    """
+    Finds connections for Tm8s
+
+    Finds connection between two players based on clubs they played for in overlapping time periods
+    """
+
+    def find_player_connections(self, p1_clubs, p2_clubs):
         """
         Finds connections between two players based on their club histories
-        :param p1_clubs: List of (club, start_year, end_year) for player 1
-        :param p2_clubs: List of (club, start_year, end_year) for player 2
+        :arg p1_clubs: List of (club, start_year, end_year) for player 1
+        :arg p2_clubs: List of (club, start_year, end_year) for player 2
         """
         connections = []
 
@@ -33,12 +39,22 @@ class ConnectionFinder:
 
 
     def calculate_overlap_years(self, overlap_start: int, overlap_end: int) -> int:
-        """Calculate overlap years?"""
-        pass
+        """
+        Calculate overlap years
+
+        :arg overlap_end: The year the players stopped playing together
+        :arg overlap_start: The year the players began playing together
+        """
+        return overlap_end - overlap_start
 
 
     def format_connection_result(self, connection: Dict, p1: str, p2: str) -> str:
-        """Formats connection result for display in TextEdit box"""
+        """
+        Formats connection result for display in TextEdit box
+
+        :arg p1: First player name
+        :arg p2: Second player name
+        """
         club = connection['club_name']
         overlap_start = connection['overlap_start']
         overlap_end = connection['overlap_end']

@@ -6,7 +6,13 @@ from connections import *
 
 
 class TM8SApp(QtWidgets.QDialog):
-    def __init__(self):
+    """Main application class for Tm8s
+
+    Handles UI, player search, and displaying connection results
+    between footballers
+    """
+    def __init__(self) -> None:
+        """Initialize the application and set up UI commands"""
         super().__init__()
 
         self.ui = Ui_TM8S()
@@ -29,7 +35,11 @@ class TM8SApp(QtWidgets.QDialog):
 
 
     def initialize_ui(self) -> None:
-        """Initialize UI elements with default values"""
+        """
+        Initialize UI elements with default values and player data
+
+        Set up placeholders, clearing input fields, and initializing progress bar
+        """
         self.ui.p1_search_box.lineEdit().setPlaceholderText("Begin typing a player name")
         self.ui.p2_search_box.lineEdit().setPlaceholderText("Begin typing a player name")
 
@@ -46,8 +56,13 @@ class TM8SApp(QtWidgets.QDialog):
         self.setWindowTitle("Tm8s")
 
 
-    def update_button_state(self):
-        """Enable search button if both player search boxes have valid entry"""
+    def update_button_state(self) -> None:
+        """
+        Enable/disable search button via input validation
+
+        Button is enabled when both player search bars contain
+        player names validated against database
+        """
         p1_text = self.ui.p1_search_box.currentText()
         p2_text = self.ui.p2_search_box.currentText()
 
@@ -58,8 +73,11 @@ class TM8SApp(QtWidgets.QDialog):
         self.ui.player_search_button.setEnabled(p1_valid and p2_valid)
 
 
-    def search_connection(self):
-        """Handle search button"""
+    def search_connection(self) -> None:
+        """
+        Handle search button click
+        and show progress bar, starting search process
+        """
         p1 = self.ui.p1_search_box.currentText()
         p2 = self.ui.p2_search_box.currentText()
 
@@ -69,15 +87,21 @@ class TM8SApp(QtWidgets.QDialog):
         self.start_search_process(p1, p2)
 
 
-    def start_search_process(self, p1, p2):
-        """Start search process with progress animation"""
+    def start_search_process(self, p1: str, p2: str) -> None:
+        """
+        Start search process with progress animation
+
+        :arg p1: First player name
+        :arg p2: Second player name
+        """
         self.progress_counter = 0
+
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(lambda: self.update_search_progress(p1, p2))
         self.timer.start(50)
 
 
-    def update_search_progress(self, p1, p2):
+    def update_search_progress(self, p1: str, p2: str) -> None:
         """Update progress bar when searching"""
         self.progress_counter += 2
         self.ui.search_progress_bar.setValue(self.progress_counter)
@@ -90,8 +114,12 @@ class TM8SApp(QtWidgets.QDialog):
             self.find_display_connections(p1, p2)
 
 
-    def find_display_connections(self, p1, p2):
-        """Find connections between players, display result"""
+    def find_display_connections(self, p1: str, p2: str):
+        """Find connections between players, display result
+
+        :arg p1: First player name
+        :arg p2: Second player name
+        """
         try:
             p1_clubs = self.db.get_player_data(p1)
             p2_clubs = self.db.get_player_data(p2)
@@ -103,8 +131,14 @@ class TM8SApp(QtWidgets.QDialog):
             print(f"Error: {str(e)}")
 
 
-    def display_connection_results(self, p1, p2, connections):
-        """Display formatted connection results"""
+    def display_connection_results(self, p1: str, p2: str, connections: List[Dict[str, Any]]) -> None:
+        """
+        Display formatted connection results
+
+        :arg p1: First player name
+        :arg p2: Second player name
+        :arg connections: list of connection dictionaries found between players
+        """
 
         bold_format = QtGui.QTextCharFormat()
         bold_format.setFontWeight(QtGui.QFont.Weight.Bold)
@@ -145,15 +179,20 @@ class TM8SApp(QtWidgets.QDialog):
         self.update_results_slider_range()
 
 
-    def adjust_results_scroll(self, value):
-        """Adjust scrollbar of the results text"""
+    def adjust_results_scroll(self, value: int) -> None:
+        """
+        Adjust scrollbar of the results text
+
+        :arg value: Slider value (0-100)
+        """
+
         scrollbar = self.ui.results_display.verticalScrollBar()
         if scrollbar.maximum() > 0:
             position = int(value * scrollbar.maximum() / 100)
             scrollbar.setValue(position)
 
 
-    def update_results_slider_range(self):
+    def update_results_slider_range(self) -> None:
         """Update the slider range based on content height"""
         try:
             scrollbar = self.ui.results_display.verticalScrollBar()
